@@ -20,9 +20,13 @@ template <typename Type> class List
     Node* tail;
 
 public:
-    List() {;}
-    ~List(){;}
-    List* list_new();
+    List() {
+        this->list_new();
+    }
+    ~List(){
+        this->list_delete();
+    }
+    void list_new();
     bool list_delete();
     bool push(Type);
     bool pop(Type&);
@@ -43,16 +47,16 @@ public:
 template <typename Type>
 void List<Type>::output ()
 {
-    if ((*this)->head==NULL){
+    if (this->head==NULL){
         std::cout<<"empty"<<std::endl;
         return;
     }
-    Node* b=(*this)->head;
+    Node* b=this->head;
     std::cout<<b->key<<std::endl;
-    while (b!=(*this)->tail)
+    while (b!=this->tail)
     {
         b=b->next;
-        std::cout<<b->key<<std::endl;
+        std::cout<<(b->key)<<std::endl;
     }
 
     return;
@@ -62,38 +66,43 @@ void List<Type>::output ()
 
 
 template <typename Type>
-List<Type>* List<Type>::list_new()
+void List<Type>::list_new()
 {
-    List<Type>* a=(List<Type>*)malloc(sizeof(List<Type>));
-    if (a==NULL) return NULL;
-    a->head=NULL;
-    a->tail=NULL;
-    return a;
+    this->head=NULL;
+    this->tail=NULL;
+    return;
 }
 
 
 template <typename Type>
 bool List<Type>::list_delete()
 {
-    while (!((*this)->tail==(*this)->head))
+    while (!(this->tail==this->head))
     {
-        Node* b=((*this)->tail);
-        (*this)->tail=b->last;
+        Node* b=(this->tail);
+        this->tail=b->last;
         free(b);
     }
-    if ((*this)->tail!=NULL){
-        free((*this)->head);
+    if (this->tail!=NULL){
+        free(this->head);
     }
-    free((*this));
     return true;
 }
 
 
 template <typename Type>
-bool List<Type>::push(Type key)
+bool List<Type>::push(Type _key)
 {
-    Node* b=(Node*)malloc(sizeof(Node));
-    if (b==NULL) return false;
+
+    Node* b;
+    try {
+    b = (Node*)malloc(sizeof(Node));
+    }catch (std::bad_alloc& ba) {
+        std::cerr << "bad_alloc caught: " << ba.what() << '\n';
+        throw ("bad_alloc_was");
+        return false;
+     }
+
     if ((this->head)==NULL){//
         b->last=NULL;
         this->head=b;
@@ -103,9 +112,9 @@ bool List<Type>::push(Type key)
         (this->tail)->next=b;
         (this->tail)=b;
     }
-     (b->next)=NULL;
-     b->key=key;
-     return true;
+    (b->next)=NULL;
+    (b->key) = _key;
+    return true;
 }
 
 

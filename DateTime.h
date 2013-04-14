@@ -34,6 +34,7 @@ public:
     bool operator >= (DateTime);
     bool operator != (DateTime);
     bool operator == (DateTime);
+    TimeSpan operator - (DateTime);
     DateTime operator + (TimeSpan);
     DateTime operator - (TimeSpan);
 
@@ -47,6 +48,10 @@ class TimeSpan
 public:
     DateTime span;
   public:
+    TimeSpan & operator = (const TimeSpan &other){
+        this->span = other.span;
+        return *this;
+    }
     friend class DateTime;
     friend std::ostream& operator << (std::ostream& ostr, my::TimeSpan x);
     friend std::istream& operator>> (std::istream&, my::TimeSpan &);
@@ -127,17 +132,14 @@ my::DateTime::DateTime(int _year, int _month, int _day): year(_year), month(_mon
 }
 
 
-//-- КОНСТРУКТОР ПО СТРОКЕ--
-//my::DateTime::DateTime(std::string str)
-//{
-//}
+
 
 // ПЕРЕВОД В СТРОКУ
 std::string my::DateTime:: str()
 {
     char c;
     std::string answer;
-    answer.push_back(c);
+    //answer.push_back(c);
     int a;
     a = day;
     for (int i = 0;  i < 2; ++i){
@@ -341,9 +343,8 @@ std::string my::DateTime:: str()
 my::DateTime my::DateTime::now()
 {
       time_t rawtime;
-      struct tm * timeinfo;
       time (&rawtime);
-      timeinfo = localtime (&rawtime);
+      localtime (&rawtime);
       my::DateTime t(rawtime);
       return t;
 }
@@ -551,6 +552,26 @@ my::DateTime  my::DateTime::operator - (my::TimeSpan a){
     return answer;
 }
 
+
+//промежуток между датами
+my::TimeSpan  my::DateTime::operator - (my::DateTime a){
+    if (!unixTimeFlag){
+        this->unixT();
+    }
+    if(!a.unixTimeFlag){
+        a.unixT();
+    }
+    size_t x;
+    if (unixTime - a.unixTime < 0) {
+         x = a.unixTime - unixTime;
+    } else {
+        x = unixTime - a.unixTime;
+    }
+    my::TimeSpan answer;
+    DateTime y(x);
+    answer.span = y;
+    return answer;
+}
 
 // ОПЕРАТОР ПРИСВАИВАНИЯ
 my::DateTime & my::DateTime::operator = (DateTime a){
