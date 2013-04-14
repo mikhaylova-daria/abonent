@@ -1,5 +1,4 @@
-#ifndef LIBR_H
-#define LIBR_H
+
 #ifndef TIME_H
     #include <time.h>
     #define TIME_H
@@ -43,4 +42,4 @@
     #include "abonent.h"
 #endif
 
-#endif
+

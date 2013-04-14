@@ -1,14 +1,14 @@
-#ifndef ABONENT_H
-#define ABONENT_H
+
 #ifndef LIBR_H
     #include "libr.h"
     #define LIBR_H
 #endif
+namespace my{
 
 struct ringing {
     my::DateTime date;
     my::TimeSpan duration;
-    string number;
+    std::string number;
 };
 
 class Abonent
@@ -17,7 +17,7 @@ class Abonent
     int balance;
     my::List<ringing> list_of_ringing;
 public:
-    Abonent (float _tariff): tariff((int)(_tariff * 100)) {;}
+    Abonent (float _tariff): tariff((int)(_tariff * 100)), balance(0) {;}
     ~Abonent(){;}
 
     void top_up_balance(float _fee){
@@ -35,6 +35,6 @@ public:
     }
 
 };
+}
 
 
-#endif // ABONENT_H

@@ -1,5 +1,4 @@
-#ifndef DATETIME_H
-#define DATETIME_H
+
     #ifndef LIBR_H
         #include "libr.h"
         #define LIBR_H
@@ -630,6 +629,3 @@ bool my::DateTime:: operator != (my::DateTime a){
 }
 
 
-
-
-#endif // DATETIME_H

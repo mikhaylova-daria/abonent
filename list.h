@@ -1,12 +1,10 @@
-#ifndef LIST_H
-#define LIST_H
+
 
 #ifndef LIBR_H
     #include "libr.h"
     #define LIBR_H
 #endif
 
-using namespace std;
 
 namespace my {
 template <typename Type> class List
@@ -25,39 +23,43 @@ public:
     List() {;}
     ~List(){;}
     List* list_new();
-    bool list_delete(List*);
-    bool push(List*, int );
-    bool pop(List*, int&);
-    bool unshift(List*, int);
-    bool shift(List*, int&);
-    bool reverse(List*);
+    bool list_delete();
+    bool push(Type);
+    bool pop(Type&);
+    bool unshift(Type);
+    bool shift(Type&);
+    bool reverse();
+    void output ();
+
+    void swap (Node* &a, Node* &b)
+    {
+        Node* w=a;
+        a=b;
+        b=w;
+    }
+
 };
 
 template <typename Type>
-void List<Type>::output (List<Type> *a)
+void List<Type>::output ()
 {
-    if (a->head==NULL){
-        std:cout<<"empty"<<endl;
+    if ((*this)->head==NULL){
+        std::cout<<"empty"<<std::endl;
         return;
     }
-    Node* b=a->head;
-    std:cout<<b->key<<endl;
-    while (b!=a->tail)
+    Node* b=(*this)->head;
+    std::cout<<b->key<<std::endl;
+    while (b!=(*this)->tail)
     {
         b=b->next;
-        cout<<b->key<<endl;
+        std::cout<<b->key<<std::endl;
     }
 
     return;
 }
 
-template <typename Type>
-void List<Type>::swap (Node* &a, Node* &b)
-{
-    Node* w=a;
-    a=b;
-    b=w;
-}
+
+
 
 template <typename Type>
 List<Type>* List<Type>::list_new()
@@ -71,35 +73,35 @@ List<Type>* List<Type>::list_new()
 
 
 template <typename Type>
-bool List<Type>::list_delete(List<Type>* a)
+bool List<Type>::list_delete()
 {
-    while (!(a->tail==a->head))
+    while (!((*this)->tail==(*this)->head))
     {
-        Node<Type>* b=(a->tail);
-        a->tail=b->last;
+        Node* b=((*this)->tail);
+        (*this)->tail=b->last;
         free(b);
     }
-    if (a->tail!=NULL){
-        free(a->head);
+    if ((*this)->tail!=NULL){
+        free((*this)->head);
     }
-    free(a);
+    free((*this));
     return true;
 }
 
 
 template <typename Type>
-bool List<Type>::push(List<Type>* a, Type key)
+bool List<Type>::push(Type key)
 {
     Node* b=(Node*)malloc(sizeof(Node));
     if (b==NULL) return false;
-    if ((a->head)==NULL){//
+    if ((this->head)==NULL){//
         b->last=NULL;
-        a->head=b;
-        a->tail=b;
+        this->head=b;
+        this->tail=b;
     }else{		//
-        (b->last)=a->tail;
-        (a->tail)->next=b;
-        (a->tail)=b;
+        (b->last)=this->tail;
+        (this->tail)->next=b;
+        (this->tail)=b;
     }
      (b->next)=NULL;
      b->key=key;
@@ -108,25 +110,25 @@ bool List<Type>::push(List<Type>* a, Type key)
 
 
 template <typename Type>
-bool List<Type>::pop(List<Type>* a, Type &buf)
+bool List<Type>::pop( Type &buf)
 {
-    if (a->head==NULL)
+    if (this->head==NULL)
         {
         Type null();
             buf=null;
             std::cerr<<"errer!";
             return false;//
     }
-    Node* b=a->tail;
-    if(b==a->head){//
+    Node* b=this->tail;
+    if(b==this->head){//
         buf=b->key;
         free(b);
-        a->head=NULL;
-        a->tail=NULL;
+        this->head=NULL;
+        this->tail=NULL;
     }else{	//
         buf=b->key;
         (b->last)->next=NULL;
-        a->tail=(b->last);
+        this->tail=(b->last);
         free(b);
     }
     return true;
@@ -134,18 +136,18 @@ bool List<Type>::pop(List<Type>* a, Type &buf)
 
 
 template <typename Type>
-bool List<Type>::unshift(List<Type>* a, Type key)
+bool List<Type>::unshift(Type key)
 {
     Node* b=(Node*)malloc(sizeof(Node));
     if (b==NULL) return false;
-    if ((a->head)==NULL){    //
+    if ((this->head)==NULL){    //
         b->next=NULL;
-        a->head=b;
-        a->tail=b;
+        this->head=b;
+        this->tail=b;
     }else{			//
-        b->next=a->head;
-        a->head->last=b;
-        a->head=b;
+        b->next=this->head;
+        this->head->last=b;
+        this->head=b;
 
     }
      b->last=NULL;
@@ -155,24 +157,24 @@ bool List<Type>::unshift(List<Type>* a, Type key)
 
 
 template <typename Type>
-bool List<Type>::shift(List<Type>* a, Type &buf)
+bool List<Type>::shift(Type &buf)
 {
-    if (a->head==NULL) {
+    if (this->head==NULL) {
         Type null();
         buf = null;
         std::cerr<<"errer!";
         return false;
     }//
-    Node* b=a->head;
-    if(b==a->tail){//
+    Node* b=this->head;
+    if(b==this->tail){//
         buf=b->key;
         free(b);
-        a->head=NULL;
-        a->tail=NULL;
+        this->head=NULL;
+        this->tail=NULL;
     }else{	//
         buf=b->key;
         (b->next)->last=NULL;
-        a->head=(b->next);
+        this->head=(b->next);
         free(b);
     }
     return true;
@@ -180,19 +182,18 @@ bool List<Type>::shift(List<Type>* a, Type &buf)
 
 
 template <typename Type>
-bool List<Type>::reverse(List<Type>* a)
+bool List<Type>::reverse()
 {
-    if (a->head==NULL) return true;//
-    if (a->head==a->tail) return true;//
-    Node<Type>* b=a->head;
-    while (b!=a->tail)
+    if (this->head==NULL) return true;//
+    if (this->head==this->tail) return true;//
+    Node* b=this->head;
+    while (b!=this->tail)
     {
         swap(b->last,b->next);
         b=(b->last);
     }
     swap(b->last, b->next);
-    swap(a->head,a->tail);
+    swap(this->head,this->tail);
     return true;
 }
 }
-#endif // LIST_H

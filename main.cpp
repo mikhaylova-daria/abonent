@@ -1,10 +1,15 @@
-#include "libr.h"
+#ifndef LIBR_H
+    #define LIBR_H
+    #include "libr.h"
+#endif
 
-using namespace std;
 
 int main()
 {
-    cout << "Hello World!" << endl;
+    my::Abonent first(1.0);
+    first.top_up_balance(1000);
+    float x = first.balance_inquiry();
+    std::cout << x;
     return 0;
 }
 
