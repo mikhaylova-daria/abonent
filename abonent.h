@@ -5,7 +5,8 @@
 #endif
 namespace my{
 
-struct ringing {
+class ringing {
+public:
     my::DateTime date;
     my::TimeSpan duration;
     std::string number;
@@ -15,9 +16,15 @@ struct ringing {
 
         this->date = other.date;
         this->duration = other.duration;
-        std::cout<<other.number<<std::endl;
-        (this->number) = other.number;
-        std::cout<<this->number<<std::endl;
+
+        ///////////////////////////////////
+        ////////// ПРОБЛЕМА ///////////////
+        ///////////////////////////////////
+
+        //std::cout<<other.number<<std::endl;  //это выводит
+        (this->number) = other.number;  // не работает :(
+        //this->number = "2314321";   //и даже так не работает :'(
+        //std::cout<<this->number<<std::endl; //ничего не пишет
         return *this;
     }
 
@@ -63,6 +70,9 @@ public:
 
     void new_ringing (ringing _new) {
         list_of_ringing.push(_new);
+        float min_dur = _new.duration.span.unixT() / 60;
+        this->top_up_balance(-min_dur * (float)((float)this->tariff / 100));
+        return;
     }
 
 
